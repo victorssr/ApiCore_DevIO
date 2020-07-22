@@ -8,7 +8,7 @@ namespace VSDev.Api.DTOs
     {
         [DisplayName("Valor para Despesas")]
         [Required(ErrorMessage = "Informe o {0}")]
-        public decimal ValorDespesas { get; set; }
+        public decimal? ValorDespesas { get; set; }
 
         // RELACIONAMENTOS
         public IEnumerable<MoradorViewModel> Moradores { get; set; }
