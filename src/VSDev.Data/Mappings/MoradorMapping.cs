@@ -27,6 +27,19 @@ namespace VSDev.Data.Mappings
             builder.Property(p => p.Contribuicao)
                 .HasColumnName("VLR_CONTRIBUICAO")
                 .HasColumnType("DECIMAL(9, 2)");
+
+            builder.Property(p => p.Foto)
+                .HasColumnName("NOM_FOTO")
+                .HasMaxLength(200)
+                .IsRequired();
+
+            builder.Property(p => p.DataNascimento)
+                .HasColumnName("DAT_NASCIMENTO")
+                .IsRequired();
+
+            builder.Property(p => p.TipoMorador)
+                .HasColumnName("COD_TIPO_MORADOR")
+                .IsRequired();
         }
     }
 }
