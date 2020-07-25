@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using VSDev.Api.Data;
 using VSDev.Business.Interfaces;
 using VSDev.Business.Interfaces.Repositories;
 using VSDev.Business.Interfaces.Services;
@@ -14,6 +15,7 @@ namespace VSDev.Api.Configurations
         public static IServiceCollection ResolveDepedencies(this IServiceCollection services)
         {
             services.AddScoped<ContextBase>();
+            services.AddScoped<ApplicationDbContext>();
             services.AddScoped<INotificator, Notificator>();
 
             // REPOSITORIES

@@ -27,6 +27,8 @@ namespace VSDev.Api
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddIdentityConfig(Configuration);
+
             services.AddAutoMapper(typeof(Startup));
 
             services.WebApiConfig();
@@ -40,6 +42,8 @@ namespace VSDev.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseAuthentication();
 
             app.UseMvcConfig();
         }
