@@ -1,11 +1,15 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using VSDev.Api.Extensions;
 using VSDev.Business.Models;
 
 namespace VSDev.Api.DTOs
 {
+    [ModelBinder(typeof(JsonWithFilesFormDataModelBinder), Name = "morador")]
     public class MoradorViewModel : MainEntityViewModel
     {
         [DisplayName("Casa")]
@@ -27,9 +31,9 @@ namespace VSDev.Api.DTOs
         [Required(ErrorMessage = "Informe o {0}")]
         public string Foto { get; set; }
 
-        [DisplayName("Foto em Base64")]
+        [DisplayName("Foto em Imagem")]
         [Required(ErrorMessage = "Informe a {0}")]
-        public string FotoUpload { get; set; }
+        public IFormFile FotoImagem { get; set; }
 
         [DisplayName("Data de Nascimento")]
         [Required(ErrorMessage = "Informe a {0}")]

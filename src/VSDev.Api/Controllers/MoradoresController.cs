@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VSDev.Api.DTOs;
@@ -64,13 +65,10 @@ namespace VSDev.Api.Controllers
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            string imageName = Guid.NewGuid() + "_" + morador.Foto;
-            if (!UploadFoto(morador.FotoUpload, imageName))
-            {
-                return CustomResponse();
-            }
+            string prefixImageName = Guid.NewGuid() + "_";
+            if (!await UploadFoto(morador.FotoImagem, prefixImageName)) return CustomResponse();
 
-            morador.Foto = imageName;
+            morador.Foto = prefixImageName + morador.FotoImagem.FileName;
             await _moradorService.Add(_mapper.Map<Morador>(morador));
 
             return CustomResponse(morador);
@@ -87,14 +85,15 @@ namespace VSDev.Api.Controllers
         }
 
 
-        private bool UploadFoto(string base64Image, string imageName)
+        private async Task<bool> UploadFoto(IFormFile formFile, string prefixImageName)
         {
-            if (string.IsNullOrEmpty(base64Image))
+            if (formFile == null || formFile.Length == 0)
             {
-                NotificarErro("Informe a foto em Base64.");
+                NotificarErro("Informe o arquivo da foto.");
                 return false;
             }
 
+            var imageName = prefixImageName + formFile.FileName;
             var pathFile = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imagens", imageName);
             if (System.IO.File.Exists(pathFile))
             {
@@ -102,8 +101,10 @@ namespace VSDev.Api.Controllers
                 return false;
             }
 
-            var imageDataByteArray = Convert.FromBase64String(base64Image);
-            System.IO.File.WriteAllBytes(pathFile, imageDataByteArray);
+            using (var stream = new FileStream(pathFile, FileMode.Create))
+            {
+                await formFile.CopyToAsync(stream);
+            }
 
             return true;
         }
