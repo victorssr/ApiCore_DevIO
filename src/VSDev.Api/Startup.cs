@@ -29,12 +29,7 @@ namespace VSDev.Api
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddControllers();
-
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
+            services.WebApiConfig();
 
             services.ResolveDepedencies();
         }
@@ -46,16 +41,7 @@ namespace VSDev.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseMvcConfig();
         }
     }
 }

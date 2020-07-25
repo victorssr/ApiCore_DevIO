@@ -45,6 +45,7 @@ namespace VSDev.Api.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Atualizar(Guid id, MoradorViewModel morador)
         {
+            ModelState.Remove("morador.FotoImagem");
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             if (!MoradorExists(id)) return NotFound();
@@ -53,6 +54,14 @@ namespace VSDev.Api.Controllers
             {
                 NotificarErro("Id informado está diferente do Id informado na query");
                 return CustomResponse();
+            }
+
+            if (morador.FotoImagem != null)
+            {
+                string prefixImageName = Guid.NewGuid() + "_";
+                if (!await UploadFoto(morador.FotoImagem, prefixImageName)) return CustomResponse();
+
+                morador.Foto = prefixImageName + morador.FotoImagem.FileName;
             }
 
             await _moradorService.Update(_mapper.Map<Morador>(morador));
