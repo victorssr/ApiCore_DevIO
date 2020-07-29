@@ -6,7 +6,7 @@ namespace VSDev.Data.Context
 {
     public class ContextBase : DbContext
     {
-        public ContextBase(DbContextOptions options) : base(options)
+        public ContextBase(DbContextOptions<ContextBase> options) : base(options)
         {
         }
 
