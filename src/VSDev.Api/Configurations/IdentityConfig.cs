@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VSDev.Api.Data;
+using VSDev.Api.Extensions;
 
 namespace VSDev.Api.Configurations
 {
@@ -17,6 +18,7 @@ namespace VSDev.Api.Configurations
 
             services.AddDefaultIdentity<IdentityUser>()
                     .AddRoles<IdentityRole>()
+                    .AddErrorDescriber<IdentityMensagensPortugues>()
                     .AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultTokenProviders();
 
