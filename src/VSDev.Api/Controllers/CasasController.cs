@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VSDev.Api.DTOs;
+using VSDev.Api.Extensions;
 using VSDev.Business.Interfaces;
 using VSDev.Business.Interfaces.Services;
 using VSDev.Business.Models;
@@ -28,13 +29,13 @@ namespace VSDev.Api.Controllers
             _notificator = notificator;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IEnumerable<CasaViewModel>> ObterTodos()
         {
             return _mapper.Map<IEnumerable<CasaViewModel>>(await _casaService.GetAll());
         }
 
+        [ClaimnsAuthorize("Casas", "Detalhe")]
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<CasaViewModel>> ObterPorId(Guid id)
         {
@@ -45,8 +46,9 @@ namespace VSDev.Api.Controllers
             return _mapper.Map<CasaViewModel>(casa);
         }
 
+        [ClaimnsAuthorize("Casas", "Atualizar")]
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> AtualizarRegistro(Guid id, CasaViewModel casaViewModel)
+        public async Task<IActionResult> Atualizar(Guid id, CasaViewModel casaViewModel)
         {
             if (!CasaExists(id)) return NotFound();
 
@@ -63,8 +65,9 @@ namespace VSDev.Api.Controllers
             return CustomResponse();
         }
 
+        [ClaimnsAuthorize("Casas", "Cadastrar")]
         [HttpPost]
-        public async Task<ActionResult<CasaViewModel>> CadastrarRegistro(CasaViewModel casaViewModel)
+        public async Task<ActionResult<CasaViewModel>> Cadastrar(CasaViewModel casaViewModel)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
@@ -73,8 +76,9 @@ namespace VSDev.Api.Controllers
             return CustomResponse(casaViewModel);
         }
 
+        [ClaimnsAuthorize("Casas", "Excluir")]
         [HttpDelete("{id:guid}")]
-        public async Task<ActionResult<CasaViewModel>> DeleteCasa(Guid id)
+        public async Task<ActionResult<CasaViewModel>> Excluir(Guid id)
         {
             if (!CasaExists(id)) return NotFound();
 
