@@ -1,7 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using System.Threading.Tasks;
 using VSDev.Api.DTOs;
+using VSDev.Api.Extensions;
 using VSDev.Business.Interfaces;
 
 namespace VSDev.Api.Controllers
@@ -11,11 +17,13 @@ namespace VSDev.Api.Controllers
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly AppSettings _appSettings;
 
-        public AuthController(INotificator notificator, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager) : base(notificator)
+        public AuthController(INotificator notificator, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IOptions<AppSettings> appSettings) : base(notificator)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _appSettings = appSettings.Value;
         }
 
         [HttpPost("register")]
@@ -34,7 +42,7 @@ namespace VSDev.Api.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                return CustomResponse(registerViewModel);
+                return CustomResponse(GerarJWT());
             }
             foreach (var erro in result.Errors)
             {
@@ -52,7 +60,7 @@ namespace VSDev.Api.Controllers
             var result = await _signInManager.PasswordSignInAsync(loginViewModel.Email, loginViewModel.Password, false, true);
             if (result.Succeeded)
             {
-                return CustomResponse(loginViewModel);
+                return CustomResponse(GerarJWT());
             }
             if (result.IsLockedOut)
             {
@@ -64,5 +72,22 @@ namespace VSDev.Api.Controllers
             return CustomResponse();
         }
 
+        private string GerarJWT()
+        {
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
+            {
+                Issuer = _appSettings.Emissor,
+                Audience = _appSettings.ValidoEm,
+                Expires = DateTime.UtcNow.AddHours(_appSettings.ExpiracaoEmHoras),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            });
+
+            var encodedToken = tokenHandler.WriteToken(token);
+
+            return encodedToken;
+        }
     }
 }

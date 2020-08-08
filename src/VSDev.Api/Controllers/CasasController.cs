@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VSDev.Api.DTOs;
@@ -11,6 +12,7 @@ using VSDev.Business.Models;
 
 namespace VSDev.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class CasasController : MainController
     {
@@ -26,6 +28,7 @@ namespace VSDev.Api.Controllers
             _notificator = notificator;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IEnumerable<CasaViewModel>> ObterTodos()
         {
