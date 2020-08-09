@@ -21,8 +21,8 @@ namespace VSDev.Api.Controllers
         private readonly IMapper _mapper;
         private readonly INotificator _notificator;
 
-        public CasasController(ICasaService casaService, IMapper mapper, INotificator notificator)
-            : base(notificator)
+        public CasasController(ICasaService casaService, IMapper mapper, INotificator notificator, IUser user)
+            : base(notificator, user)
         {
             _casaService = casaService;
             _mapper = mapper;

@@ -20,7 +20,7 @@ namespace VSDev.Api.Controllers
         private readonly IMoradorService _moradorService;
         private readonly IMapper _mapper;
 
-        public MoradoresController(INotificator notificator, IMoradorService moradorService, IMapper mapper) : base(notificator)
+        public MoradoresController(INotificator notificator, IMoradorService moradorService, IMapper mapper, IUser user) : base(notificator, user)
         {
             _moradorService = moradorService;
             _mapper = mapper;

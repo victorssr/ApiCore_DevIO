@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using VSDev.Api.Data;
+using VSDev.Api.Extensions;
 using VSDev.Business.Interfaces;
 using VSDev.Business.Interfaces.Repositories;
 using VSDev.Business.Interfaces.Services;
@@ -17,6 +19,9 @@ namespace VSDev.Api.Configurations
             services.AddScoped<ContextBase>();
             services.AddScoped<ApplicationDbContext>();
             services.AddScoped<INotificator, Notificator>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IUser, AppUser>();
 
             // REPOSITORIES
             services.AddScoped<ICasaRepository, CasaRepository>();

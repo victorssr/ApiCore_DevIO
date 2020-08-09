@@ -21,7 +21,8 @@ namespace VSDev.Api.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppSettings _appSettings;
 
-        public AuthController(INotificator notificator, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IOptions<AppSettings> appSettings) : base(notificator)
+        public AuthController(INotificator notificator, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,
+                              IOptions<AppSettings> appSettings, IUser user) : base(notificator, user)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -85,7 +86,7 @@ namespace VSDev.Api.Controllers
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
-            foreach(var role in roles)
+            foreach (var role in roles)
             {
                 claims.Add(new Claim("role", role));
             }
