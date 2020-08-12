@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Net.Http.Headers;
 
 namespace VSDev.Api.Configurations
 {
@@ -8,6 +9,24 @@ namespace VSDev.Api.Configurations
     {
         public static IServiceCollection WebApiConfig(this IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Development",
+                    builder => builder.AllowAnyOrigin()
+                                .AllowAnyMethod()
+                                .AllowAnyHeader()
+                                .AllowCredentials()
+                                );
+
+                options.AddPolicy("Production", builder =>
+                    builder
+                    .WithMethods("GET")
+                    .WithOrigins("vsdev.io")
+                    .SetIsOriginAllowedToAllowWildcardSubdomains()
+                    .WithHeaders(HeaderNames.Accept, "vs-dev-io"));
+            });
+
+
             services.AddControllers();
 
             services.Configure<ApiBehaviorOptions>(options =>
@@ -21,9 +40,7 @@ namespace VSDev.Api.Configurations
         public static IApplicationBuilder UseMvcConfig(this IApplicationBuilder app)
         {
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
