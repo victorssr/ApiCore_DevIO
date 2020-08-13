@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,10 +34,12 @@ namespace VSDev.Api
 
             services.WebApiConfig();
 
+            services.AddSwaggerConfig();
+
             services.ResolveDepedencies();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
             {
@@ -51,6 +54,8 @@ namespace VSDev.Api
 
             app.UseAuthentication();
             app.UseMvcConfig();
+
+            app.UserSwaggerConfig(provider);
         }
     }
 }

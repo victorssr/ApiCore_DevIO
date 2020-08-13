@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using VSDev.Api.Data;
 using VSDev.Api.Extensions;
 using VSDev.Business.Interfaces;
@@ -22,6 +24,8 @@ namespace VSDev.Api.Configurations
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IUser, AppUser>();
+
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
             // REPOSITORIES
             services.AddScoped<ICasaRepository, CasaRepository>();
