@@ -11,10 +11,11 @@ using VSDev.Business.Interfaces;
 using VSDev.Business.Interfaces.Services;
 using VSDev.Business.Models;
 
-namespace VSDev.Api.Controllers
+namespace VSDev.Api.Controllers.V1
 {
+    [ApiVersion("1.0")]
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class CasasController : MainController
     {
         private readonly ICasaService _casaService;

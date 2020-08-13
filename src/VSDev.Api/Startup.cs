@@ -46,6 +46,7 @@ namespace VSDev.Api
             else
             {
                 app.UseCors("Production");
+                app.UseHsts();
             }
 
             app.UseAuthentication();

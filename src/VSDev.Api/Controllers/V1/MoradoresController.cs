@@ -12,9 +12,10 @@ using VSDev.Business.Interfaces;
 using VSDev.Business.Interfaces.Services;
 using VSDev.Business.Models;
 
-namespace VSDev.Api.Controllers
+namespace VSDev.Api.Controllers.V1
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class MoradoresController : MainController
     {
         private readonly IMoradorService _moradorService;
