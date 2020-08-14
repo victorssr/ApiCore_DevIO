@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using VSDev.Business.Interfaces;
 
 namespace VSDev.Api.Controllers.V2
@@ -7,10 +9,12 @@ namespace VSDev.Api.Controllers.V2
     [Route("api/v{version:apiVersion}/[controller]")]
     public class TesteVersao : MainController
     {
-        public TesteVersao(INotificator notificator, IUser user) : base(notificator, user)
-        {
-        }
+        private readonly ILogger _logger;
 
+        public TesteVersao(INotificator notificator, IUser user, ILogger<TesteVersao> logger) : base(notificator, user)
+        {
+            _logger = logger;
+        }
 
         [HttpGet]
         public string Value()

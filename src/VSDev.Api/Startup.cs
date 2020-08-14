@@ -1,4 +1,5 @@
 using AutoMapper;
+using Elmah.Io.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using VSDev.Api.Configurations;
 using VSDev.Data.Context;
 
@@ -36,6 +38,8 @@ namespace VSDev.Api
 
             services.AddSwaggerConfig();
 
+            services.AddLoggerConfig();
+
             services.ResolveDepedencies();
         }
 
@@ -51,6 +55,8 @@ namespace VSDev.Api
                 app.UseCors("Production");
                 app.UseHsts();
             }
+
+            app.UseLoggerConfig();
 
             app.UseAuthentication();
             app.UseMvcConfig();
