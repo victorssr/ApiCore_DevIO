@@ -44,6 +44,8 @@ namespace VSDev.Api.Configurations
                         new string[] { }
                     }
                 });
+
+                options.EnableAnnotations();
             });
 
             return services;

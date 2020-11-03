@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 using VSDev.Api.DTOs;
 using VSDev.Api.Extensions;
 using VSDev.Business.Interfaces;
@@ -31,6 +33,7 @@ namespace VSDev.Api.Controllers.V1
         }
 
         [HttpGet]
+        [SwaggerResponse(StatusCodes.Status200OK, "", typeof(IEnumerable<CasaViewModel>))]
         public async Task<IEnumerable<CasaViewModel>> ObterTodos()
         {
             return _mapper.Map<IEnumerable<CasaViewModel>>(await _casaService.GetAll());
@@ -38,6 +41,7 @@ namespace VSDev.Api.Controllers.V1
 
         [ClaimnsAuthorize("Casas", "Detalhe")]
         [HttpGet("{id:guid}")]
+        [SwaggerResponse(StatusCodes.Status200OK, "", typeof(CasaViewModel))]
         public async Task<ActionResult<CasaViewModel>> ObterPorId(Guid id)
         {
             var casa = await _casaService.GetById(id);
@@ -49,6 +53,7 @@ namespace VSDev.Api.Controllers.V1
 
         [ClaimnsAuthorize("Casas", "Atualizar")]
         [HttpPut("{id:guid}")]
+        [SwaggerResponse(StatusCodes.Status200OK, "", typeof(string))]
         public async Task<IActionResult> Atualizar(Guid id, CasaViewModel casaViewModel)
         {
             if (!CasaExists(id)) return NotFound();
@@ -68,6 +73,7 @@ namespace VSDev.Api.Controllers.V1
 
         [ClaimnsAuthorize("Casas", "Cadastrar")]
         [HttpPost]
+        [SwaggerResponse(StatusCodes.Status200OK, "", typeof(CasaViewModel))]
         public async Task<ActionResult<CasaViewModel>> Cadastrar(CasaViewModel casaViewModel)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
@@ -79,6 +85,7 @@ namespace VSDev.Api.Controllers.V1
 
         [ClaimnsAuthorize("Casas", "Excluir")]
         [HttpDelete("{id:guid}")]
+        [SwaggerResponse(StatusCodes.Status200OK, "", typeof(string))]
         public async Task<ActionResult<CasaViewModel>> Excluir(Guid id)
         {
             if (!CasaExists(id)) return NotFound();

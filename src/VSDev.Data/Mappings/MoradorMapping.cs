@@ -40,6 +40,14 @@ namespace VSDev.Data.Mappings
             builder.Property(p => p.TipoMorador)
                 .HasColumnName("COD_TIPO_MORADOR")
                 .IsRequired();
+
+            builder.Property(p => p.Documento)
+                .HasColumnName("DSC_DOCUMENTO")
+                .IsRequired();
+
+            builder.Property(p => p.TipoDocumento)
+                .HasColumnName("COD_TIPO_DOCUMENTO")
+                .IsRequired();
         }
     }
 }

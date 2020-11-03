@@ -12,6 +12,8 @@ namespace VSDev.Business.Models
         public string Foto { get; set; }
         public DateTime DataNascimento { get; set; }
         public TipoMorador TipoMorador { get; set; }
+        public string Documento { get; set; }
+        public TipoDocumento TipoDocumento { get; set; }
 
         // RELACIONAMENTOS
         public Casa Casa { get; set; }
@@ -22,6 +24,12 @@ namespace VSDev.Business.Models
     {
         Gestor,
         Morador
+    }
+
+    public enum TipoDocumento
+    {
+        Cpf,
+        Cnpj
     }
 
 }
