@@ -43,6 +43,12 @@ namespace VSDev.Api.DTOs
         [Required(ErrorMessage = "Informe o {0}")]
         public TipoMorador TipoMorador { get; set; }
 
+        [Required(ErrorMessage = "Informe o {0}")]
+        public string Documento { get; set; }
+
+        [DisplayName("Tipo de Documento")]
+        [Required(ErrorMessage = "Informe o {0}")]
+        public TipoDocumento TipoDocumento { get; set; }
 
         // RELACIONAMENTOS
         public CasaViewModel Casa{ get; set; }

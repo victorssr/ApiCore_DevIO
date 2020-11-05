@@ -36,7 +36,7 @@ namespace VSDev.Api.Controllers.V1
         [SwaggerResponse(StatusCodes.Status200OK, "", typeof(IEnumerable<CasaViewModel>))]
         public async Task<IEnumerable<CasaViewModel>> ObterTodos()
         {
-            return _mapper.Map<IEnumerable<CasaViewModel>>(await _casaService.GetAll());
+            return _mapper.Map<IEnumerable<CasaViewModel>>(await _casaService.ObterCasasEndereco());
         }
 
         [ClaimnsAuthorize("Casas", "Detalhe")]
@@ -71,7 +71,7 @@ namespace VSDev.Api.Controllers.V1
             return CustomResponse();
         }
 
-        [ClaimnsAuthorize("Casas", "Cadastrar")]
+        [ClaimnsAuthorize("Casas", "Adicionar")]
         [HttpPost]
         [SwaggerResponse(StatusCodes.Status200OK, "", typeof(CasaViewModel))]
         public async Task<ActionResult<CasaViewModel>> Cadastrar(CasaViewModel casaViewModel)
