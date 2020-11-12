@@ -5,7 +5,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 using VSDev.Api.DTOs;
 using VSDev.Api.Extensions;
@@ -44,7 +43,7 @@ namespace VSDev.Api.Controllers.V1
         [SwaggerResponse(StatusCodes.Status200OK, "", typeof(CasaViewModel))]
         public async Task<ActionResult<CasaViewModel>> ObterPorId(Guid id)
         {
-            var casa = await _casaService.GetById(id);
+            var casa = await _casaService.ObterCasaEndereco(id);
 
             if (casa == null) return NotFound();
 

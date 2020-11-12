@@ -26,7 +26,7 @@ namespace VSDev.Business.Services
             await _repositoryBase.Update(entity);
         }
 
-        public async Task Delete(Guid id)
+        public virtual async Task Delete(Guid id)
         {
             await _repositoryBase.Delete(id);
         }
