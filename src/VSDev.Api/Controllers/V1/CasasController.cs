@@ -31,6 +31,7 @@ namespace VSDev.Api.Controllers.V1
             _notificator = notificator;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [SwaggerResponse(StatusCodes.Status200OK, "", typeof(IEnumerable<CasaViewModel>))]
         public async Task<IEnumerable<CasaViewModel>> ObterTodos()
@@ -38,7 +39,7 @@ namespace VSDev.Api.Controllers.V1
             return _mapper.Map<IEnumerable<CasaViewModel>>(await _casaService.ObterCasasEndereco());
         }
 
-        [ClaimnsAuthorize("Casas", "Detalhe")]
+        //[ClaimnsAuthorize("Casas", "Detalhe")]
         [HttpGet("{id:guid}")]
         [SwaggerResponse(StatusCodes.Status200OK, "", typeof(CasaViewModel))]
         public async Task<ActionResult<CasaViewModel>> ObterPorId(Guid id)
