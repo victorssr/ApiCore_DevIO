@@ -43,5 +43,10 @@ namespace VSDev.Business.Services
 
             await base.Delete(id);
         }
+
+        public async Task<Casa> ObterCasaEnderecoMoradores(Guid id)
+        {
+            return await _casaRepository.ObterCasaEnderecoMoradores(id);
+        }
     }
 }

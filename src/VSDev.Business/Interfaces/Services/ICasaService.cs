@@ -9,5 +9,6 @@ namespace VSDev.Business.Interfaces.Services
     {
         Task<IEnumerable<Casa>> ObterCasasEndereco();
         Task<Casa> ObterCasaEndereco(Guid id);
+        Task<Casa> ObterCasaEnderecoMoradores(Guid id);
     }
 }

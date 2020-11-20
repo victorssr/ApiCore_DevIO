@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using VSDev.Api.DTOs;
+using VSDev.Api.Extensions;
 using VSDev.Business.Interfaces;
 using VSDev.Business.Interfaces.Services;
 using VSDev.Business.Models;
 
 namespace VSDev.Api.Controllers.V1
 {
+    [Authorize]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class MoradoresController : MainController
@@ -43,10 +44,11 @@ namespace VSDev.Api.Controllers.V1
             return _mapper.Map<MoradorViewModel>(morador);
         }
 
+        [ClaimnsAuthorize("Moradores", "Atualizar")]
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Atualizar(Guid id, MoradorViewModel morador)
         {
-            ModelState.Remove("morador.FotoImagem");
+            ModelState.Remove("FotoImagem");
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             if (!MoradorExists(id)) return NotFound();
@@ -57,12 +59,12 @@ namespace VSDev.Api.Controllers.V1
                 return CustomResponse();
             }
 
-            if (morador.FotoImagem != null)
+            if (!string.IsNullOrEmpty(morador.FotoImagem))
             {
-                string prefixImageName = Guid.NewGuid() + "_";
-                if (!await UploadFoto(morador.FotoImagem, prefixImageName)) return CustomResponse();
+                string imageName = Guid.NewGuid() + "." + morador.Foto.Split(".")[1];
+                if (!UploadFoto(morador.FotoImagem, imageName)) return CustomResponse();
 
-                morador.Foto = prefixImageName + morador.FotoImagem.FileName;
+                morador.Foto = imageName;
             }
 
             await _moradorService.Update(_mapper.Map<Morador>(morador));
@@ -70,20 +72,22 @@ namespace VSDev.Api.Controllers.V1
             return CustomResponse();
         }
 
+        [ClaimnsAuthorize("Moradores", "Adicionar")]
         [HttpPost]
         public async Task<ActionResult<MoradorViewModel>> Cadastrar(MoradorViewModel morador)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            string prefixImageName = Guid.NewGuid() + "_";
-            if (!await UploadFoto(morador.FotoImagem, prefixImageName)) return CustomResponse();
+            string imageName = Guid.NewGuid() + "." + morador.Foto.Split(".")[1];
+            if (!UploadFoto(morador.FotoImagem, imageName)) return CustomResponse();
 
-            morador.Foto = prefixImageName + morador.FotoImagem.FileName;
+            morador.Foto = imageName;
             await _moradorService.Add(_mapper.Map<Morador>(morador));
 
             return CustomResponse(morador);
         }
 
+        [ClaimnsAuthorize("Moradores", "Excluir")]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<MoradorViewModel>> Excluir(Guid id)
         {
@@ -95,15 +99,14 @@ namespace VSDev.Api.Controllers.V1
         }
 
 
-        private async Task<bool> UploadFoto(IFormFile formFile, string prefixImageName)
+        private bool UploadFoto(string base64Image, string imageName)
         {
-            if (formFile == null || formFile.Length == 0)
+            if (string.IsNullOrEmpty(base64Image))
             {
                 NotificarErro("Informe o arquivo da foto.");
                 return false;
             }
 
-            var imageName = prefixImageName + formFile.FileName;
             var pathFile = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imagens", imageName);
             if (System.IO.File.Exists(pathFile))
             {
@@ -111,10 +114,8 @@ namespace VSDev.Api.Controllers.V1
                 return false;
             }
 
-            using (var stream = new FileStream(pathFile, FileMode.Create))
-            {
-                await formFile.CopyToAsync(stream);
-            }
+            var imageDataByte = Convert.FromBase64String(base64Image);
+            System.IO.File.WriteAllBytes(pathFile, imageDataByte);
 
             return true;
         }

@@ -27,5 +27,13 @@ namespace VSDev.Data.Repositories
                             .Include(c => c.Endereco)
                             .FirstOrDefaultAsync(c => c.Id == id);
         }
+
+        public async Task<Casa> ObterCasaEnderecoMoradores(Guid id)
+        {
+            return await _contextBase.Casas.AsNoTracking()
+                            .Include(c => c.Endereco)
+                            .Include(c => c.Moradores)
+                            .FirstOrDefaultAsync(c => c.Id == id);
+        }
     }
 }

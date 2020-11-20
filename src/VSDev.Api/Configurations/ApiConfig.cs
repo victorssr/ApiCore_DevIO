@@ -51,6 +51,7 @@ namespace VSDev.Api.Configurations
 
         public static IApplicationBuilder UseMvcConfig(this IApplicationBuilder app)
         {
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
